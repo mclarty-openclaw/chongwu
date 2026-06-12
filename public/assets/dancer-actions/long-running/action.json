@@ -3,7 +3,10 @@
   "poseFamily": "tired-slow-pose",
   "primaryMotion": "tired slow dance with drooping head and softened skirt motion",
   "source": "public/assets/dancer-actions/codex-running",
-  "motionTechnique": "local-region-pose-transform",
+  "motionTechnique": "single-source-pose-selection",
+  "artifactControls": [
+    "single-source-frame-no-overlay-afterimage"
+  ],
   "frameCount": 8,
   "frameIntervalMs": 1000
 }

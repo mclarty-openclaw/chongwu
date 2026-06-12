@@ -3,7 +3,10 @@
   "poseFamily": "thinking-turn-pose",
   "primaryMotion": "slow thinking dance with head turn and contemplative upper-body tilt",
   "source": "public/assets/dancer-actions/codex-running",
-  "motionTechnique": "local-region-pose-transform",
+  "motionTechnique": "single-source-pose-selection",
+  "artifactControls": [
+    "single-source-frame-no-overlay-afterimage"
+  ],
   "frameCount": 8,
   "frameIntervalMs": 720
 }

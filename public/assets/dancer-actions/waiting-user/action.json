@@ -3,7 +3,10 @@
   "poseFamily": "raised-hand-wave",
   "primaryMotion": "waiting dance with obvious raised-hand wave motion",
   "source": "public/assets/dancer-actions/codex-running",
-  "motionTechnique": "local-region-pose-transform",
+  "motionTechnique": "single-source-pose-selection",
+  "artifactControls": [
+    "single-source-frame-no-overlay-afterimage"
+  ],
   "frameCount": 8,
   "frameIntervalMs": 700
 }

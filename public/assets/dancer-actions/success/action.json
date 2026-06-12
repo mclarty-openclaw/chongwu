@@ -3,7 +3,10 @@
   "poseFamily": "star-celebration-pose",
   "primaryMotion": "celebration dance with lifted torso and expanded skirt motion",
   "source": "public/assets/dancer-actions/codex-running",
-  "motionTechnique": "local-region-pose-transform",
+  "motionTechnique": "single-source-pose-selection",
+  "artifactControls": [
+    "single-source-frame-no-overlay-afterimage"
+  ],
   "frameCount": 8,
   "frameIntervalMs": 300
 }

@@ -6,7 +6,7 @@ import math
 from dataclasses import dataclass
 from pathlib import Path
 
-from PIL import Image, ImageEnhance, ImageFilter
+from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,7 +33,7 @@ SPECS = [
 ]
 
 SOURCE_INDEXES = {
-    "idle": [3, 3, 4, 4, 5, 5, 3, 3],
+    "idle": [3, 3, 3, 3, 3, 3, 3, 3],
     "command-running": [2, 2, 1, 1, 2, 2, 7, 7],
     "thinking": [5, 5, 7, 7, 5, 5, 7, 7],
     "long-running": [1, 1, 0, 0, 1, 1, 0, 0],
@@ -41,67 +41,6 @@ SOURCE_INDEXES = {
     "success": [3, 4, 5, 6, 5, 4, 3, 4],
     "error": [0, 0, 7, 7, 0, 0, 7, 7],
 }
-
-
-def alpha_bbox(image: Image.Image) -> tuple[int, int, int, int]:
-    bbox = image.getchannel("A").getbbox()
-    if bbox is None:
-        return (0, 0, image.width, image.height)
-    return bbox
-
-
-def region_box(bbox: tuple[int, int, int, int], name: str) -> tuple[int, int, int, int]:
-    left, top, right, bottom = bbox
-    width = right - left
-    height = bottom - top
-
-    regions = {
-        "head": (0.30, 0.00, 0.72, 0.30),
-        "upper": (0.16, 0.10, 0.84, 0.56),
-        "left_arm": (0.00, 0.02, 0.42, 0.45),
-        "right_arm": (0.58, 0.02, 1.00, 0.45),
-        "skirt": (0.00, 0.35, 1.00, 0.78),
-        "legs": (0.30, 0.62, 0.72, 1.00),
-    }
-    x1, y1, x2, y2 = regions[name]
-    return (
-        max(0, int(left + width * x1)),
-        max(0, int(top + height * y1)),
-        min(640, int(left + width * x2)),
-        min(640, int(top + height * y2)),
-    )
-
-
-def paste_transformed(
-    base: Image.Image,
-    source: Image.Image,
-    box: tuple[int, int, int, int],
-    *,
-    angle: float = 0,
-    dx: float = 0,
-    dy: float = 0,
-    scale: float = 1,
-    alpha: float = 0.92,
-) -> None:
-    crop = source.crop(box)
-    if scale != 1:
-        width = max(1, int(crop.width * scale))
-        height = max(1, int(crop.height * scale))
-        crop = crop.resize((width, height), Image.Resampling.BICUBIC)
-
-    if angle:
-        crop = crop.rotate(angle, resample=Image.Resampling.BICUBIC, expand=True)
-
-    if alpha < 1:
-        r, g, b, a = crop.split()
-        a = ImageEnhance.Brightness(a).enhance(alpha)
-        crop = Image.merge("RGBA", (r, g, b, a))
-
-    cx = (box[0] + box[2]) / 2 + dx
-    cy = (box[1] + box[3]) / 2 + dy
-    x = int(cx - crop.width / 2)
-    y = int(cy - crop.height / 2)
-    base.alpha_composite(crop, (x, y))
 
 
 def pose_canvas(source: Image.Image, *, angle: float = 0, dx: float = 0, dy: float = 0, scale: float = 1) -> Image.Image:
@@ -117,13 +56,6 @@ def pose_canvas(source: Image.Image, *, angle: float = 0, dx: float = 0, dy: flo
     return canvas
 
 
-def fade_region(image: Image.Image, box: tuple[int, int, int, int], opacity: float) -> None:
-    crop = image.crop(box)
-    r, g, b, a = crop.split()
-    a = ImageEnhance.Brightness(a.filter(ImageFilter.GaussianBlur(1.2))).enhance(opacity)
-    image.paste(Image.merge("RGBA", (r, g, b, a)), box)
-
-
 def phase(index: int, count: int) -> float:
     return math.sin(index / count * math.tau)
 
@@ -131,65 +63,29 @@ def phase(index: int, count: int) -> float:
 def make_frame(action_id: str, source: Image.Image, index: int, count: int) -> Image.Image:
     p = phase(index, count)
     q = math.cos(index / count * math.tau)
-    image = source.copy()
-    bbox = alpha_bbox(source)
 
     if action_id == "idle":
-        image = pose_canvas(source, angle=0.4 * p, dy=1.0 * p, scale=0.996 + 0.004 * q)
-        fade_region(image, region_box(bbox, "upper"), 0.78)
-        paste_transformed(image, source, region_box(bbox, "upper"), dy=1.4 * p, scale=1 + 0.006 * p, alpha=0.82)
-        paste_transformed(image, source, region_box(bbox, "skirt"), dy=-1.0 * p, scale=1 + 0.012 * q, alpha=0.76)
+        return pose_canvas(source, angle=0.25 * p, dy=0.8 * p, scale=0.998 + 0.002 * q)
 
     elif action_id == "command-running":
-        image = pose_canvas(source, angle=-4.5 + 1.0 * p, dx=-10, dy=4, scale=1.01)
-        fade_region(image, region_box(bbox, "upper"), 0.52)
-        fade_region(image, region_box(bbox, "head"), 0.60)
-        paste_transformed(image, source, region_box(bbox, "upper"), angle=-8 + 3.0 * p, dx=-15 + 3 * q, dy=8, scale=1.03, alpha=0.96)
-        paste_transformed(image, source, region_box(bbox, "head"), angle=-9 + 3.0 * p, dx=-17, dy=5, alpha=0.96)
-        paste_transformed(image, source, region_box(bbox, "skirt"), angle=4 * p, dx=4 * p, scale=0.988, alpha=0.70)
+        return pose_canvas(source, angle=-1.2 + 0.35 * p, dx=-4, dy=2, scale=1.005)
 
     elif action_id == "thinking":
-        image = pose_canvas(source, angle=3.5 * p, dx=4 * p, dy=0, scale=1.0)
-        fade_region(image, region_box(bbox, "head"), 0.48)
-        fade_region(image, region_box(bbox, "upper"), 0.68)
-        paste_transformed(image, source, region_box(bbox, "head"), angle=13 * p, dx=13 * p, dy=2 * q, alpha=0.98)
-        paste_transformed(image, source, region_box(bbox, "upper"), angle=6 * p, dx=8 * p, dy=2, alpha=0.84)
-        paste_transformed(image, source, region_box(bbox, "left_arm"), angle=-13 * q, dx=-11 * q, dy=5 * p, alpha=0.84)
+        return pose_canvas(source, angle=0.9 * p, dx=2.5 * p, dy=0.5 * q, scale=1.0)
 
     elif action_id == "long-running":
-        image = pose_canvas(source, angle=-3.5, dx=-4, dy=10, scale=0.99)
-        fade_region(image, region_box(bbox, "head"), 0.55)
-        fade_region(image, region_box(bbox, "upper"), 0.62)
-        paste_transformed(image, source, region_box(bbox, "head"), angle=-11 + 2 * p, dx=-9, dy=14 + 2 * p, alpha=0.94)
-        paste_transformed(image, source, region_box(bbox, "upper"), angle=-6 + p, dx=-7, dy=12, scale=0.99, alpha=0.84)
-        paste_transformed(image, source, region_box(bbox, "skirt"), dy=7 + 2 * p, scale=0.975, alpha=0.72)
+        return pose_canvas(source, angle=-2.2 + 0.25 * p, dx=-3, dy=7 + 1.0 * p, scale=0.992)
 
     elif action_id == "waiting-user":
-        image = pose_canvas(source, angle=1.5 * p, dx=2 * p, dy=0, scale=1.0)
-        fade_region(image, region_box(bbox, "right_arm"), 0.42)
-        fade_region(image, region_box(bbox, "upper"), 0.70)
-        paste_transformed(image, source, region_box(bbox, "right_arm"), angle=24 * p, dx=22 * p, dy=-18 - 5 * q, scale=1.08, alpha=1.0)
-        paste_transformed(image, source, region_box(bbox, "upper"), angle=2.2 * p, dx=2 * p, dy=1, alpha=0.76)
-        paste_transformed(image, source, region_box(bbox, "skirt"), angle=-3 * p, dx=-2 * p, alpha=0.72)
+        return pose_canvas(source, angle=0.6 * p, dx=1.5 * p, dy=-1.0 * q, scale=1.004)
 
     elif action_id == "success":
-        image = pose_canvas(source, angle=4 * p, dx=3 * p, dy=-8 - 2 * q, scale=1.025)
-        fade_region(image, region_box(bbox, "upper"), 0.55)
-        fade_region(image, region_box(bbox, "skirt"), 0.58)
-        paste_transformed(image, source, region_box(bbox, "upper"), angle=10 * p, dx=9 * p, dy=-16 - 3 * q, scale=1.06, alpha=0.97)
-        paste_transformed(image, source, region_box(bbox, "left_arm"), angle=-18 * p, dx=-15 * p, dy=-10, alpha=0.88)
-        paste_transformed(image, source, region_box(bbox, "right_arm"), angle=18 * p, dx=15 * p, dy=-10, alpha=0.88)
-        paste_transformed(image, source, region_box(bbox, "skirt"), angle=9 * p, dx=8 * p, dy=-4, scale=1.07, alpha=0.90)
+        return pose_canvas(source, angle=1.8 * p, dx=2.5 * p, dy=-7 - 1.5 * q, scale=1.025)
 
     elif action_id == "error":
-        image = pose_canvas(source, angle=-7, dx=-8, dy=4, scale=0.998)
-        fade_region(image, region_box(bbox, "head"), 0.46)
-        fade_region(image, region_box(bbox, "upper"), 0.60)
-        paste_transformed(image, source, region_box(bbox, "head"), angle=-17 + 3 * p, dx=-16, dy=7, alpha=0.98)
-        paste_transformed(image, source, region_box(bbox, "upper"), angle=-10 + 2 * p, dx=-12, dy=6, scale=0.988, alpha=0.84)
-        paste_transformed(image, source, region_box(bbox, "skirt"), angle=3 * p, dx=-5, dy=2, alpha=0.70)
+        return pose_canvas(source, angle=-3.8 + 0.35 * p, dx=-5, dy=3 + 0.8 * q, scale=0.996)
 
-    return image
+    return source.copy()
 
 
 def write_metadata(spec: ActionSpec) -> None:
@@ -199,7 +95,8 @@ def write_metadata(spec: ActionSpec) -> None:
         "poseFamily": spec.pose_family,
         "primaryMotion": spec.primary_motion,
         "source": "public/assets/dancer-actions/codex-running",
-        "motionTechnique": "local-region-pose-transform",
+        "motionTechnique": "single-source-pose-selection",
+        "artifactControls": ["single-source-frame-no-overlay-afterimage"],
         "frameCount": 8,
         "frameIntervalMs": spec.frame_interval_ms,
     }

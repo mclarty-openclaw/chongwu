@@ -40,7 +40,7 @@ describe("native desktop dancer rig", () => {
     }
   });
 
-  it("documents every non-running state as a distinct local pose variant of the coordinated dancer", () => {
+  it("documents every non-running state as a distinct single-source pose variant of the coordinated dancer", () => {
     const expectedPoseFamilies: Record<string, string> = {
       idle: "idle-breathing-pose",
       "codex-running": "dance-loop",
@@ -58,18 +58,20 @@ describe("native desktop dancer rig", () => {
         poseFamily: string;
         primaryMotion: string;
         motionTechnique?: string;
+        artifactControls?: string[];
       };
 
       expect(metadata.poseFamily, actionId).toBe(poseFamily);
       if (actionId !== "codex-running") {
-        expect(metadata.motionTechnique, actionId).toBe("local-region-pose-transform");
+        expect(metadata.motionTechnique, actionId).toBe("single-source-pose-selection");
+        expect(metadata.artifactControls, actionId).toContain("single-source-frame-no-overlay-afterimage");
       } else {
         expect(metadata.primaryMotion, actionId).not.toBe("shared-dance-transform");
       }
     }
   });
 
-  it("maps each Codex state to a distinct coordinated local-pose clip", () => {
+  it("maps each Codex state to a distinct coordinated single-source pose clip", () => {
     expect(swiftSource).toContain("case .idle: return \"idle\"");
     expect(swiftSource).toContain("case .codexRunning: return \"codex-running\"");
     expect(swiftSource).toContain("case .commandRunning: return \"command-running\"");

@@ -3,7 +3,10 @@
   "poseFamily": "terminal-forward-focus",
   "primaryMotion": "focused forward-leaning dance with active upper-body motion",
   "source": "public/assets/dancer-actions/codex-running",
-  "motionTechnique": "local-region-pose-transform",
+  "motionTechnique": "single-source-pose-selection",
+  "artifactControls": [
+    "single-source-frame-no-overlay-afterimage"
+  ],
   "frameCount": 8,
   "frameIntervalMs": 380
 }

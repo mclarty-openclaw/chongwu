@@ -3,7 +3,10 @@
   "poseFamily": "concerned-tilt-pose",
   "primaryMotion": "concerned dance with tilted head and cautious body motion",
   "source": "public/assets/dancer-actions/codex-running",
-  "motionTechnique": "local-region-pose-transform",
+  "motionTechnique": "single-source-pose-selection",
+  "artifactControls": [
+    "single-source-frame-no-overlay-afterimage"
+  ],
   "frameCount": 8,
   "frameIntervalMs": 720
 }
