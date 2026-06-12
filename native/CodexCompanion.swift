@@ -840,7 +840,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func actionClipId(for state: PetState) -> String {
         switch state {
-        case .idle, .codexRunning, .commandRunning, .thinking, .longRunning, .waitingUser, .success, .error: return "codex-running"
+        case .idle: return "idle"
+        case .codexRunning: return "codex-running"
+        case .commandRunning: return "command-running"
+        case .thinking: return "thinking"
+        case .longRunning: return "long-running"
+        case .waitingUser: return "waiting-user"
+        case .success: return "success"
+        case .error: return "error"
         }
     }
 

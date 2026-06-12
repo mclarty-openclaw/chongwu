@@ -1,7 +1,9 @@
 {
   "id": "waiting-user",
-  "poseFamily": "wave-dance-reminder",
-  "primaryMotion": "gentle dance with obvious waiting wave",
+  "poseFamily": "raised-hand-wave",
+  "primaryMotion": "waiting dance with obvious raised-hand wave motion",
   "source": "public/assets/dancer-actions/codex-running",
-  "frameCount": 8
+  "motionTechnique": "local-region-pose-transform",
+  "frameCount": 8,
+  "frameIntervalMs": 700
 }

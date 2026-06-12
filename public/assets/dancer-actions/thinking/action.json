@@ -1,7 +1,9 @@
 {
   "id": "thinking",
-  "poseFamily": "slow-thinking-dance",
-  "primaryMotion": "slow contemplative dance with thinking sparkles",
+  "poseFamily": "thinking-turn-pose",
+  "primaryMotion": "slow thinking dance with head turn and contemplative upper-body tilt",
   "source": "public/assets/dancer-actions/codex-running",
-  "frameCount": 8
+  "motionTechnique": "local-region-pose-transform",
+  "frameCount": 8,
+  "frameIntervalMs": 720
 }

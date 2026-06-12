@@ -1,7 +1,9 @@
 {
   "id": "success",
-  "poseFamily": "success-dream-dance",
-  "primaryMotion": "bright celebratory dream dance with stars",
+  "poseFamily": "star-celebration-pose",
+  "primaryMotion": "celebration dance with lifted torso and expanded skirt motion",
   "source": "public/assets/dancer-actions/codex-running",
-  "frameCount": 8
+  "motionTechnique": "local-region-pose-transform",
+  "frameCount": 8,
+  "frameIntervalMs": 300
 }

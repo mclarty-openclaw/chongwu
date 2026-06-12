@@ -1,7 +1,9 @@
 {
   "id": "error",
-  "poseFamily": "error-dream-dance",
-  "primaryMotion": "slow concerned dream dance with magnifier accent",
+  "poseFamily": "concerned-tilt-pose",
+  "primaryMotion": "concerned dance with tilted head and cautious body motion",
   "source": "public/assets/dancer-actions/codex-running",
-  "frameCount": 8
+  "motionTechnique": "local-region-pose-transform",
+  "frameCount": 8,
+  "frameIntervalMs": 720
 }

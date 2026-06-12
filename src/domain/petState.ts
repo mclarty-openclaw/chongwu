@@ -117,14 +117,14 @@ const nativeMotionProfiles: Record<PetState, NativeMotionProfile> = {
 };
 
 const nativeActionClips: Record<PetState, NativeActionClip> = {
-  idle: { id: "codex-running", frameIntervalMs: 1200, fallbackFrameDirectory: "dancer-frames" },
+  idle: { id: "idle", frameIntervalMs: 1200, fallbackFrameDirectory: "dancer-frames" },
   codex_running: { id: "codex-running", frameIntervalMs: 420, fallbackFrameDirectory: "dancer-frames" },
-  command_running: { id: "codex-running", frameIntervalMs: 380, fallbackFrameDirectory: "dancer-frames" },
-  thinking: { id: "codex-running", frameIntervalMs: 720, fallbackFrameDirectory: "dancer-frames" },
-  waiting_user: { id: "codex-running", frameIntervalMs: 700, fallbackFrameDirectory: "dancer-frames" },
-  success: { id: "codex-running", frameIntervalMs: 300, fallbackFrameDirectory: "dancer-frames" },
-  error: { id: "codex-running", frameIntervalMs: 720, fallbackFrameDirectory: "dancer-frames" },
-  long_running: { id: "codex-running", frameIntervalMs: 1000, fallbackFrameDirectory: "dancer-frames" },
+  command_running: { id: "command-running", frameIntervalMs: 380, fallbackFrameDirectory: "dancer-frames" },
+  thinking: { id: "thinking", frameIntervalMs: 720, fallbackFrameDirectory: "dancer-frames" },
+  waiting_user: { id: "waiting-user", frameIntervalMs: 700, fallbackFrameDirectory: "dancer-frames" },
+  success: { id: "success", frameIntervalMs: 300, fallbackFrameDirectory: "dancer-frames" },
+  error: { id: "error", frameIntervalMs: 720, fallbackFrameDirectory: "dancer-frames" },
+  long_running: { id: "long-running", frameIntervalMs: 1000, fallbackFrameDirectory: "dancer-frames" },
 };
 
 const bubbles: Partial<Record<PetState, string>> = {

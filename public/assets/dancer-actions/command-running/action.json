@@ -1,7 +1,9 @@
 {
   "id": "command-running",
-  "poseFamily": "terminal-dream-dance",
-  "primaryMotion": "focused dream dance with terminal accent",
+  "poseFamily": "terminal-forward-focus",
+  "primaryMotion": "focused forward-leaning dance with active upper-body motion",
   "source": "public/assets/dancer-actions/codex-running",
-  "frameCount": 8
+  "motionTechnique": "local-region-pose-transform",
+  "frameCount": 8,
+  "frameIntervalMs": 380
 }

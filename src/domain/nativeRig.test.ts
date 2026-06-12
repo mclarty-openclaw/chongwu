@@ -40,33 +40,45 @@ describe("native desktop dancer rig", () => {
     }
   });
 
-  it("documents every state as a decorated variant of the coordinated dream dance base", () => {
+  it("documents every non-running state as a distinct local pose variant of the coordinated dancer", () => {
     const expectedPoseFamilies: Record<string, string> = {
-      idle: "idle-dream-dance",
+      idle: "idle-breathing-pose",
       "codex-running": "dance-loop",
-      "command-running": "terminal-dream-dance",
-      thinking: "slow-thinking-dance",
-      "long-running": "slow-dream-dance",
-      "waiting-user": "wave-dance-reminder",
-      success: "success-dream-dance",
-      error: "error-dream-dance",
+      "command-running": "terminal-forward-focus",
+      thinking: "thinking-turn-pose",
+      "long-running": "tired-slow-pose",
+      "waiting-user": "raised-hand-wave",
+      success: "star-celebration-pose",
+      error: "concerned-tilt-pose",
     };
 
     for (const [actionId, poseFamily] of Object.entries(expectedPoseFamilies)) {
       const metadataPath = resolve(process.cwd(), `public/assets/dancer-actions/${actionId}/action.json`);
-      const metadata = JSON.parse(readFileSync(metadataPath, "utf8")) as { poseFamily: string; primaryMotion: string };
+      const metadata = JSON.parse(readFileSync(metadataPath, "utf8")) as {
+        poseFamily: string;
+        primaryMotion: string;
+        motionTechnique?: string;
+      };
 
       expect(metadata.poseFamily, actionId).toBe(poseFamily);
       if (actionId !== "codex-running") {
-        expect(metadata.primaryMotion, actionId).toContain("dance");
+        expect(metadata.motionTechnique, actionId).toBe("local-region-pose-transform");
       } else {
         expect(metadata.primaryMotion, actionId).not.toBe("shared-dance-transform");
       }
     }
   });
 
-  it("maps every Codex state to the coordinated dancing clip instead of less attractive prop actions", () => {
-    expect(swiftSource).toContain(
+  it("maps each Codex state to a distinct coordinated local-pose clip", () => {
+    expect(swiftSource).toContain("case .idle: return \"idle\"");
+    expect(swiftSource).toContain("case .codexRunning: return \"codex-running\"");
+    expect(swiftSource).toContain("case .commandRunning: return \"command-running\"");
+    expect(swiftSource).toContain("case .thinking: return \"thinking\"");
+    expect(swiftSource).toContain("case .longRunning: return \"long-running\"");
+    expect(swiftSource).toContain("case .waitingUser: return \"waiting-user\"");
+    expect(swiftSource).toContain("case .success: return \"success\"");
+    expect(swiftSource).toContain("case .error: return \"error\"");
+    expect(swiftSource).not.toContain(
       "case .idle, .codexRunning, .commandRunning, .thinking, .longRunning, .waitingUser, .success, .error: return \"codex-running\"",
     );
     expect(swiftSource).not.toContain("case .codexRunning:\n            drawKeyboardAccent");

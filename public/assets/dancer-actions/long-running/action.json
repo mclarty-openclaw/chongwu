@@ -1,7 +1,9 @@
 {
   "id": "long-running",
-  "poseFamily": "slow-dream-dance",
-  "primaryMotion": "very slow dream dance with coffee accent",
+  "poseFamily": "tired-slow-pose",
+  "primaryMotion": "tired slow dance with drooping head and softened skirt motion",
   "source": "public/assets/dancer-actions/codex-running",
-  "frameCount": 8
+  "motionTechnique": "local-region-pose-transform",
+  "frameCount": 8,
+  "frameIntervalMs": 1000
 }

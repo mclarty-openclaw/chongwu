@@ -1,7 +1,9 @@
 {
   "id": "idle",
-  "poseFamily": "idle-dream-dance",
-  "primaryMotion": "very slow calm dream dance idle",
+  "poseFamily": "idle-breathing-pose",
+  "primaryMotion": "calm breathing dance with tiny upper-body and skirt motion",
   "source": "public/assets/dancer-actions/codex-running",
-  "frameCount": 8
+  "motionTechnique": "local-region-pose-transform",
+  "frameCount": 8,
+  "frameIntervalMs": 1200
 }
