@@ -6,8 +6,8 @@ Codex Companion 是一个 macOS 原生桌宠，用透明窗口显示一位梦幻
 
 - Swift/AppKit 原生桌宠窗口，不依赖网页运行时。
 - 通过 Codex lifecycle hook 写入本地 `state.json`，桌宠读取该文件完成状态联动。
-- `codex_running`、`thinking`、`long_running`、`waiting_user` 复用最耐看的梦幻跳舞动作基底，通过节奏、气泡和轻量状态装饰区分语义。
-- `command_running`、`success`、`error` 保留独立语义动作，避免执行、成功、失败状态混淆。
+- 所有 Codex 状态都复用最协调的梦幻跳舞动作基底，通过节奏、气泡和轻量状态装饰区分语义。
+- 原生层限制整张人物图的全局位移/旋转，避免出现“图片整体在动、人物没动”的观感。
 - 动作 PNG 懒加载、进程探测缓存、低频舞台重绘，降低常驻资源占用。
 
 ## Requirements

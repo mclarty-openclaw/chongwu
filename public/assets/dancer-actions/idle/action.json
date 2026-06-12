@@ -1,7 +1,7 @@
 {
   "id": "idle",
-  "poseFamily": "resting-idle",
-  "primaryMotion": "seated sleepy breathing pose",
-  "source": "public/assets/source/dancer-actions-keyposes-v4.png",
+  "poseFamily": "idle-dream-dance",
+  "primaryMotion": "very slow calm dream dance idle",
+  "source": "public/assets/dancer-actions/codex-running",
   "frameCount": 8
 }

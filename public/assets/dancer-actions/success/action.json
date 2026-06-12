@@ -1,7 +1,7 @@
 {
   "id": "success",
-  "poseFamily": "jump-celebration",
-  "primaryMotion": "celebratory jump with stars",
-  "source": "public/assets/source/dancer-actions-keyposes-v4.png",
-  "frameCount": 12
+  "poseFamily": "success-dream-dance",
+  "primaryMotion": "bright celebratory dream dance with stars",
+  "source": "public/assets/dancer-actions/codex-running",
+  "frameCount": 8
 }

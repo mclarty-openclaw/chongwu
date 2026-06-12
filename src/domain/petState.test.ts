@@ -128,7 +128,7 @@ describe("state priority and presentation", () => {
     ]);
   });
 
-  it("keeps native desktop motion visible for every state", () => {
+  it("keeps native desktop global motion subtle so the frame sequence carries the character movement", () => {
     const states: PetState[] = [
       "idle",
       "codex_running",
@@ -144,26 +144,27 @@ describe("state priority and presentation", () => {
       const motion = nativeMotionForState(state);
 
       expect(motion.durationMs).toBeGreaterThanOrEqual(700);
-      expect(Math.max(Math.abs(motion.translateX), Math.abs(motion.translateY))).toBeGreaterThanOrEqual(8);
+      expect(Math.max(Math.abs(motion.translateX), Math.abs(motion.translateY))).toBeLessThanOrEqual(4);
+      expect(Math.abs(motion.rotateDeg)).toBeLessThanOrEqual(1.2);
     }
   });
 
   it("maps every state to a v3 native action clip and playback interval", () => {
-    expect(actionClipForState("idle")).toMatchObject({ id: "idle", frameIntervalMs: 1200, fallbackFrameDirectory: "dancer-frames" });
+    expect(actionClipForState("idle")).toMatchObject({ id: "codex-running", frameIntervalMs: 1200, fallbackFrameDirectory: "dancer-frames" });
     expect(actionClipForState("codex_running")).toMatchObject({
       id: "codex-running",
       frameIntervalMs: 420,
       fallbackFrameDirectory: "dancer-frames",
     });
     expect(actionClipForState("command_running")).toMatchObject({
-      id: "command-running",
+      id: "codex-running",
       frameIntervalMs: 380,
       fallbackFrameDirectory: "dancer-frames",
     });
     expect(actionClipForState("thinking")).toMatchObject({ id: "codex-running", frameIntervalMs: 720 });
     expect(actionClipForState("long_running")).toMatchObject({ id: "codex-running", frameIntervalMs: 1000 });
     expect(actionClipForState("waiting_user")).toMatchObject({ id: "codex-running", frameIntervalMs: 700 });
-    expect(actionClipForState("success")).toMatchObject({ id: "success", frameIntervalMs: 300 });
-    expect(actionClipForState("error")).toMatchObject({ id: "error", frameIntervalMs: 720 });
+    expect(actionClipForState("success")).toMatchObject({ id: "codex-running", frameIntervalMs: 300 });
+    expect(actionClipForState("error")).toMatchObject({ id: "codex-running", frameIntervalMs: 720 });
   });
 });

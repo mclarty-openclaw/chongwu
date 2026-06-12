@@ -744,6 +744,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let minimumVisibleActiveDuration: TimeInterval = 6
     private let processDetectionInterval: TimeInterval = 15
     private let stageEffectInterval: TimeInterval = 0.25
+    private let maxGlobalImageTravel: CGFloat = 4
+    private let maxGlobalRotationDegrees: CGFloat = 1.2
     private let maxCachedActionClips = 3
     private var actionClipCacheOrder: [PetState] = []
     private var animationPaused = false
@@ -838,12 +840,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func actionClipId(for state: PetState) -> String {
         switch state {
-        case .idle: return "idle"
-        case .codexRunning: return "codex-running"
-        case .commandRunning: return "command-running"
-        case .thinking, .longRunning, .waitingUser: return "codex-running"
-        case .success: return "success"
-        case .error: return "error"
+        case .idle, .codexRunning, .commandRunning, .thinking, .longRunning, .waitingUser, .success, .error: return "codex-running"
         }
     }
 
@@ -1272,22 +1269,38 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func actionMotion(for state: PetState) -> ActionMotion {
         switch state {
         case .idle:
-            return ActionMotion(duration: 3.6, yValues: [0, 5, 0], rotationValues: [-0.7, 0.7, -0.7], scaleValues: [0.995, 1.005, 0.995], keyTimes: [0, 0.5, 1])
+            return subtleDanceMotion(duration: 4.2, yValues: [0, 2, 0], rotationValues: [-0.35, 0.35, -0.35], scaleValues: [0.998, 1.002, 0.998], keyTimes: [0, 0.5, 1])
         case .codexRunning:
-            return ActionMotion(duration: 2.1, yValues: [0, 10, -2, 0], rotationValues: [-1.5, 1.8, -1.0, -1.5], scaleValues: [1.0, 1.018, 1.0, 1.0], keyTimes: [0, 0.34, 0.72, 1])
+            return subtleDanceMotion(duration: 2.1, yValues: [0, 3, -1, 0], rotationValues: [-0.7, 0.9, -0.5, -0.7], scaleValues: [1.0, 1.006, 1.0, 1.0], keyTimes: [0, 0.34, 0.72, 1])
         case .commandRunning:
-            return ActionMotion(duration: 1.55, yValues: [0, 4, 0], rotationValues: [-3.0, -0.8, -3.0], scaleValues: [1.01, 1.025, 1.01], keyTimes: [0, 0.5, 1])
+            return subtleDanceMotion(duration: 1.8, yValues: [0, 2, 0], rotationValues: [-0.8, 0.2, -0.8], scaleValues: [1.002, 1.008, 1.002], keyTimes: [0, 0.5, 1])
         case .thinking:
-            return ActionMotion(duration: 3.0, yValues: [0, 7, 0], rotationValues: [-4.0, 4.0, -4.0], scaleValues: [1.0, 1.01, 1.0], keyTimes: [0, 0.5, 1])
+            return subtleDanceMotion(duration: 3.2, yValues: [0, 2, 0], rotationValues: [-0.6, 0.7, -0.6], scaleValues: [1.0, 1.004, 1.0], keyTimes: [0, 0.5, 1])
         case .longRunning:
-            return ActionMotion(duration: 4.6, yValues: [0, 5, -2, 0], rotationValues: [-1.0, 1.1, -0.6, -1.0], scaleValues: [0.998, 1.006, 1.0, 0.998], keyTimes: [0, 0.40, 0.72, 1])
+            return subtleDanceMotion(duration: 4.6, yValues: [0, 2, -1, 0], rotationValues: [-0.45, 0.5, -0.25, -0.45], scaleValues: [0.998, 1.003, 1.0, 0.998], keyTimes: [0, 0.40, 0.72, 1])
         case .waitingUser:
-            return ActionMotion(duration: 1.6, yValues: [0, 10, 2, 10, 0], rotationValues: [-3.5, 4.5, -2.5, 4.2, -3.5], scaleValues: [1.0, 1.018, 1.0, 1.018, 1.0], keyTimes: [0, 0.25, 0.5, 0.75, 1])
+            return subtleDanceMotion(duration: 2.0, yValues: [0, 3, 1, 3, 0], rotationValues: [-0.8, 1.0, -0.4, 0.9, -0.8], scaleValues: [1.0, 1.006, 1.0, 1.006, 1.0], keyTimes: [0, 0.25, 0.5, 0.75, 1])
         case .success:
-            return ActionMotion(duration: 1.05, yValues: [0, 42, 8, 0], rotationValues: [-6.0, 8.0, -4.0, -6.0], scaleValues: [1.0, 1.04, 1.02, 1.0], keyTimes: [0, 0.38, 0.72, 1])
+            return subtleDanceMotion(duration: 1.2, yValues: [0, 4, 1, 0], rotationValues: [-0.9, 1.2, -0.4, -0.9], scaleValues: [1.0, 1.010, 1.004, 1.0], keyTimes: [0, 0.38, 0.72, 1])
         case .error:
-            return ActionMotion(duration: 2.0, yValues: [0, 2, 0], rotationValues: [-8.0, -5.2, -8.0], scaleValues: [1.0, 0.995, 1.0], keyTimes: [0, 0.5, 1])
+            return subtleDanceMotion(duration: 2.4, yValues: [0, 1, 0], rotationValues: [-1.0, -0.4, -1.0], scaleValues: [1.0, 0.998, 1.0], keyTimes: [0, 0.5, 1])
         }
+    }
+
+    private func subtleDanceMotion(
+        duration: TimeInterval,
+        yValues: [CGFloat],
+        rotationValues: [CGFloat],
+        scaleValues: [CGFloat],
+        keyTimes: [NSNumber]
+    ) -> ActionMotion {
+        ActionMotion(
+            duration: duration,
+            yValues: yValues.map { min(max($0, -maxGlobalImageTravel), maxGlobalImageTravel) },
+            rotationValues: rotationValues.map { min(max($0, -maxGlobalRotationDegrees), maxGlobalRotationDegrees) },
+            scaleValues: scaleValues,
+            keyTimes: keyTimes
+        )
     }
 
     private func frameStep(for state: PetState) -> Int {

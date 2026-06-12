@@ -40,16 +40,16 @@ describe("native desktop dancer rig", () => {
     }
   });
 
-  it("documents the long-lived states that reuse the dream dance base", () => {
+  it("documents every state as a decorated variant of the coordinated dream dance base", () => {
     const expectedPoseFamilies: Record<string, string> = {
-      idle: "resting-idle",
+      idle: "idle-dream-dance",
       "codex-running": "dance-loop",
-      "command-running": "focused-terminal",
+      "command-running": "terminal-dream-dance",
       thinking: "slow-thinking-dance",
       "long-running": "slow-dream-dance",
       "waiting-user": "wave-dance-reminder",
-      success: "jump-celebration",
-      error: "magnifier-error",
+      success: "success-dream-dance",
+      error: "error-dream-dance",
     };
 
     for (const [actionId, poseFamily] of Object.entries(expectedPoseFamilies)) {
@@ -57,7 +57,7 @@ describe("native desktop dancer rig", () => {
       const metadata = JSON.parse(readFileSync(metadataPath, "utf8")) as { poseFamily: string; primaryMotion: string };
 
       expect(metadata.poseFamily, actionId).toBe(poseFamily);
-      if (["thinking", "long-running", "waiting-user"].includes(actionId)) {
+      if (actionId !== "codex-running") {
         expect(metadata.primaryMotion, actionId).toContain("dance");
       } else {
         expect(metadata.primaryMotion, actionId).not.toBe("shared-dance-transform");
@@ -65,11 +65,20 @@ describe("native desktop dancer rig", () => {
     }
   });
 
-  it("maps long-lived Codex states to the dancing clip instead of less attractive prop actions", () => {
-    expect(swiftSource).toContain("case .codexRunning: return \"codex-running\"");
-    expect(swiftSource).toContain("case .thinking, .longRunning, .waitingUser: return \"codex-running\"");
+  it("maps every Codex state to the coordinated dancing clip instead of less attractive prop actions", () => {
+    expect(swiftSource).toContain(
+      "case .idle, .codexRunning, .commandRunning, .thinking, .longRunning, .waitingUser, .success, .error: return \"codex-running\"",
+    );
     expect(swiftSource).not.toContain("case .codexRunning:\n            drawKeyboardAccent");
     expect(swiftSource).not.toContain("drawKeyboardAccent");
+  });
+
+  it("keeps global image motion subtle so movement comes from the character frames", () => {
+    expect(swiftSource).toContain("maxGlobalImageTravel");
+    expect(swiftSource).toContain("maxGlobalRotationDegrees");
+    expect(swiftSource).not.toContain("yValues: [0, 42");
+    expect(swiftSource).not.toContain("rotationValues: [-8.0");
+    expect(swiftSource).not.toContain("rotationValues: [-3.5, 4.5");
   });
 
   it("implements the v3 larger native window and screen-dominant character size", () => {

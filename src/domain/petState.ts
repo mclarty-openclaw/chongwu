@@ -106,24 +106,24 @@ const hatchAnimations: Record<PetState, HatchPetAnimation> = {
 };
 
 const nativeMotionProfiles: Record<PetState, NativeMotionProfile> = {
-  idle: { translateX: 0, translateY: 10, rotateDeg: 1.1, durationMs: 1800 },
-  codex_running: { translateX: 0, translateY: 12, rotateDeg: 1.4, durationMs: 1500 },
-  command_running: { translateX: 10, translateY: 8, rotateDeg: 2.6, durationMs: 900 },
-  thinking: { translateX: 0, translateY: 12, rotateDeg: 2.0, durationMs: 1300 },
-  waiting_user: { translateX: 12, translateY: 10, rotateDeg: 4.0, durationMs: 1050 },
-  success: { translateX: 0, translateY: 28, rotateDeg: 3.0, durationMs: 850 },
-  error: { translateX: 16, translateY: 8, rotateDeg: 3.5, durationMs: 700 },
-  long_running: { translateX: 0, translateY: 9, rotateDeg: 1.2, durationMs: 2200 },
+  idle: { translateX: 0, translateY: 2, rotateDeg: 0.4, durationMs: 4200 },
+  codex_running: { translateX: 0, translateY: 3, rotateDeg: 0.9, durationMs: 2100 },
+  command_running: { translateX: 0, translateY: 2, rotateDeg: 0.8, durationMs: 1800 },
+  thinking: { translateX: 0, translateY: 2, rotateDeg: 0.7, durationMs: 3200 },
+  waiting_user: { translateX: 0, translateY: 3, rotateDeg: 1.0, durationMs: 2000 },
+  success: { translateX: 0, translateY: 4, rotateDeg: 1.2, durationMs: 1200 },
+  error: { translateX: 0, translateY: 1, rotateDeg: 1.0, durationMs: 2400 },
+  long_running: { translateX: 0, translateY: 2, rotateDeg: 0.5, durationMs: 4600 },
 };
 
 const nativeActionClips: Record<PetState, NativeActionClip> = {
-  idle: { id: "idle", frameIntervalMs: 1200, fallbackFrameDirectory: "dancer-frames" },
+  idle: { id: "codex-running", frameIntervalMs: 1200, fallbackFrameDirectory: "dancer-frames" },
   codex_running: { id: "codex-running", frameIntervalMs: 420, fallbackFrameDirectory: "dancer-frames" },
-  command_running: { id: "command-running", frameIntervalMs: 380, fallbackFrameDirectory: "dancer-frames" },
+  command_running: { id: "codex-running", frameIntervalMs: 380, fallbackFrameDirectory: "dancer-frames" },
   thinking: { id: "codex-running", frameIntervalMs: 720, fallbackFrameDirectory: "dancer-frames" },
   waiting_user: { id: "codex-running", frameIntervalMs: 700, fallbackFrameDirectory: "dancer-frames" },
-  success: { id: "success", frameIntervalMs: 300, fallbackFrameDirectory: "dancer-frames" },
-  error: { id: "error", frameIntervalMs: 720, fallbackFrameDirectory: "dancer-frames" },
+  success: { id: "codex-running", frameIntervalMs: 300, fallbackFrameDirectory: "dancer-frames" },
+  error: { id: "codex-running", frameIntervalMs: 720, fallbackFrameDirectory: "dancer-frames" },
   long_running: { id: "codex-running", frameIntervalMs: 1000, fallbackFrameDirectory: "dancer-frames" },
 };
 
