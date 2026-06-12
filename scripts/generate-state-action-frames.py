@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import json
-import math
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -33,62 +32,21 @@ SPECS = [
 ]
 
 SOURCE_INDEXES = {
-    "idle": [3, 3, 3, 3, 3, 3, 3, 3],
-    "command-running": [2, 2, 1, 1, 2, 2, 7, 7],
-    "thinking": [5, 5, 7, 7, 5, 5, 7, 7],
-    "long-running": [1, 1, 0, 0, 1, 1, 0, 0],
-    "waiting-user": [6, 6, 6, 7, 7, 6, 6, 7],
-    "success": [3, 4, 5, 6, 5, 4, 3, 4],
-    "error": [0, 0, 7, 7, 0, 0, 7, 7],
+    "idle": [3, 3, 4, 3, 3, 5, 4, 3],
+    "command-running": [0, 1, 2, 1, 0, 7, 6, 7],
+    "thinking": [5, 6, 5, 7, 4, 5, 7, 6],
+    "long-running": [1, 1, 0, 1, 2, 2, 1, 0],
+    "waiting-user": [6, 5, 6, 7, 3, 4, 6, 7],
+    "success": [3, 4, 5, 6, 7, 2, 5, 4],
+    "error": [0, 1, 7, 0, 2, 7, 1, 0],
 }
 
 
-def pose_canvas(source: Image.Image, *, angle: float = 0, dx: float = 0, dy: float = 0, scale: float = 1) -> Image.Image:
-    layer = source
-    if scale != 1:
-        layer = source.resize((int(source.width * scale), int(source.height * scale)), Image.Resampling.BICUBIC)
-    if angle:
-        layer = layer.rotate(angle, resample=Image.Resampling.BICUBIC, expand=True)
-    canvas = Image.new("RGBA", source.size, (0, 0, 0, 0))
-    x = int((source.width - layer.width) / 2 + dx)
-    y = int((source.height - layer.height) / 2 + dy)
-    canvas.alpha_composite(layer, (x, y))
-    return canvas
-
-
-def phase(index: int, count: int) -> float:
-    return math.sin(index / count * math.tau)
-
-
-def make_frame(action_id: str, source: Image.Image, index: int, count: int) -> Image.Image:
-    p = phase(index, count)
-    q = math.cos(index / count * math.tau)
-
-    if action_id == "idle":
-        return pose_canvas(source, angle=0.25 * p, dy=0.8 * p, scale=0.998 + 0.002 * q)
-
-    elif action_id == "command-running":
-        return pose_canvas(source, angle=-1.2 + 0.35 * p, dx=-4, dy=2, scale=1.005)
-
-    elif action_id == "thinking":
-        return pose_canvas(source, angle=0.9 * p, dx=2.5 * p, dy=0.5 * q, scale=1.0)
-
-    elif action_id == "long-running":
-        return pose_canvas(source, angle=-2.2 + 0.25 * p, dx=-3, dy=7 + 1.0 * p, scale=0.992)
-
-    elif action_id == "waiting-user":
-        return pose_canvas(source, angle=0.6 * p, dx=1.5 * p, dy=-1.0 * q, scale=1.004)
-
-    elif action_id == "success":
-        return pose_canvas(source, angle=1.8 * p, dx=2.5 * p, dy=-7 - 1.5 * q, scale=1.025)
-
-    elif action_id == "error":
-        return pose_canvas(source, angle=-3.8 + 0.35 * p, dx=-5, dy=3 + 0.8 * q, scale=0.996)
-
+def make_frame(source: Image.Image) -> Image.Image:
     return source.copy()
 
 
-def write_metadata(spec: ActionSpec) -> None:
+def write_metadata(spec: ActionSpec, source_indexes: list[int]) -> None:
     target = ACTION_DIR / spec.action_id / "action.json"
     data = {
         "id": spec.action_id,
@@ -96,7 +54,9 @@ def write_metadata(spec: ActionSpec) -> None:
         "primaryMotion": spec.primary_motion,
         "source": "public/assets/dancer-actions/codex-running",
         "motionTechnique": "single-source-pose-selection",
-        "artifactControls": ["single-source-frame-no-overlay-afterimage"],
+        "frameFidelity": "source-pixel-copy",
+        "sourceFrameIndexes": source_indexes,
+        "artifactControls": ["single-source-frame-no-overlay-afterimage", "no-resample-preserve-source-detail"],
         "frameCount": 8,
         "frameIntervalMs": spec.frame_interval_ms,
     }
@@ -117,10 +77,10 @@ def main() -> None:
         source_indexes = SOURCE_INDEXES[spec.action_id]
         for index, source_index in enumerate(source_indexes):
             source = source_frames[source_index]
-            frame = make_frame(spec.action_id, source, index, 8)
+            frame = make_frame(source)
             frame.save(target_dir / f"frame-{index}.png")
 
-        write_metadata(spec)
+        write_metadata(spec, source_indexes)
 
 
 if __name__ == "__main__":

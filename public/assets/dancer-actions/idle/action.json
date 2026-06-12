@@ -4,8 +4,20 @@
   "primaryMotion": "calm breathing dance with tiny upper-body and skirt motion",
   "source": "public/assets/dancer-actions/codex-running",
   "motionTechnique": "single-source-pose-selection",
+  "frameFidelity": "source-pixel-copy",
+  "sourceFrameIndexes": [
+    3,
+    3,
+    4,
+    3,
+    3,
+    5,
+    4,
+    3
+  ],
   "artifactControls": [
-    "single-source-frame-no-overlay-afterimage"
+    "single-source-frame-no-overlay-afterimage",
+    "no-resample-preserve-source-detail"
   ],
   "frameCount": 8,
   "frameIntervalMs": 1200

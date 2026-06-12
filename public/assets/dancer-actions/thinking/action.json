@@ -4,8 +4,20 @@
   "primaryMotion": "slow thinking dance with head turn and contemplative upper-body tilt",
   "source": "public/assets/dancer-actions/codex-running",
   "motionTechnique": "single-source-pose-selection",
+  "frameFidelity": "source-pixel-copy",
+  "sourceFrameIndexes": [
+    5,
+    6,
+    5,
+    7,
+    4,
+    5,
+    7,
+    6
+  ],
   "artifactControls": [
-    "single-source-frame-no-overlay-afterimage"
+    "single-source-frame-no-overlay-afterimage",
+    "no-resample-preserve-source-detail"
   ],
   "frameCount": 8,
   "frameIntervalMs": 720

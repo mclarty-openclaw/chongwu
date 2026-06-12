@@ -4,8 +4,20 @@
   "primaryMotion": "tired slow dance with drooping head and softened skirt motion",
   "source": "public/assets/dancer-actions/codex-running",
   "motionTechnique": "single-source-pose-selection",
+  "frameFidelity": "source-pixel-copy",
+  "sourceFrameIndexes": [
+    1,
+    1,
+    0,
+    1,
+    2,
+    2,
+    1,
+    0
+  ],
   "artifactControls": [
-    "single-source-frame-no-overlay-afterimage"
+    "single-source-frame-no-overlay-afterimage",
+    "no-resample-preserve-source-detail"
   ],
   "frameCount": 8,
   "frameIntervalMs": 1000

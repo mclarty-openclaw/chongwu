@@ -4,8 +4,20 @@
   "primaryMotion": "concerned dance with tilted head and cautious body motion",
   "source": "public/assets/dancer-actions/codex-running",
   "motionTechnique": "single-source-pose-selection",
+  "frameFidelity": "source-pixel-copy",
+  "sourceFrameIndexes": [
+    0,
+    1,
+    7,
+    0,
+    2,
+    7,
+    1,
+    0
+  ],
   "artifactControls": [
-    "single-source-frame-no-overlay-afterimage"
+    "single-source-frame-no-overlay-afterimage",
+    "no-resample-preserve-source-detail"
   ],
   "frameCount": 8,
   "frameIntervalMs": 720

@@ -4,8 +4,20 @@
   "primaryMotion": "focused forward-leaning dance with active upper-body motion",
   "source": "public/assets/dancer-actions/codex-running",
   "motionTechnique": "single-source-pose-selection",
+  "frameFidelity": "source-pixel-copy",
+  "sourceFrameIndexes": [
+    0,
+    1,
+    2,
+    1,
+    0,
+    7,
+    6,
+    7
+  ],
   "artifactControls": [
-    "single-source-frame-no-overlay-afterimage"
+    "single-source-frame-no-overlay-afterimage",
+    "no-resample-preserve-source-detail"
   ],
   "frameCount": 8,
   "frameIntervalMs": 380

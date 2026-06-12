@@ -59,15 +59,44 @@ describe("native desktop dancer rig", () => {
         primaryMotion: string;
         motionTechnique?: string;
         artifactControls?: string[];
+        frameFidelity?: string;
+        sourceFrameIndexes?: number[];
       };
 
       expect(metadata.poseFamily, actionId).toBe(poseFamily);
       if (actionId !== "codex-running") {
         expect(metadata.motionTechnique, actionId).toBe("single-source-pose-selection");
         expect(metadata.artifactControls, actionId).toContain("single-source-frame-no-overlay-afterimage");
+        expect(metadata.artifactControls, actionId).toContain("no-resample-preserve-source-detail");
+        expect(metadata.frameFidelity, actionId).toBe("source-pixel-copy");
       } else {
         expect(metadata.primaryMotion, actionId).not.toBe("shared-dance-transform");
       }
+    }
+  });
+
+  it("keeps generated action sequences detailed and visually rich without resampling source frames", () => {
+    const minimumUniqueSourceFrames: Record<string, number> = {
+      idle: 3,
+      "command-running": 5,
+      thinking: 4,
+      "long-running": 3,
+      "waiting-user": 5,
+      success: 6,
+      error: 4,
+    };
+
+    for (const [actionId, minimumUniqueCount] of Object.entries(minimumUniqueSourceFrames)) {
+      const metadataPath = resolve(process.cwd(), `public/assets/dancer-actions/${actionId}/action.json`);
+      const metadata = JSON.parse(readFileSync(metadataPath, "utf8")) as {
+        sourceFrameIndexes?: number[];
+      };
+
+      expect(metadata.sourceFrameIndexes, actionId).toHaveLength(8);
+      expect(new Set(metadata.sourceFrameIndexes).size, actionId).toBeGreaterThanOrEqual(minimumUniqueCount);
+      expect(metadata.sourceFrameIndexes?.every((frameIndex) => Number.isInteger(frameIndex) && frameIndex >= 0 && frameIndex <= 7), actionId).toBe(
+        true,
+      );
     }
   });
 
