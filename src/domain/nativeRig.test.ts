@@ -60,6 +60,7 @@ describe("native desktop dancer rig", () => {
         motionTechnique?: string;
         artifactControls?: string[];
         frameFidelity?: string;
+        edgeTreatment?: string;
         sourceFrameIndexes?: number[];
       };
 
@@ -68,9 +69,14 @@ describe("native desktop dancer rig", () => {
         expect(metadata.motionTechnique, actionId).toBe("single-source-pose-selection");
         expect(metadata.artifactControls, actionId).toContain("single-source-frame-no-overlay-afterimage");
         expect(metadata.artifactControls, actionId).toContain("no-resample-preserve-source-detail");
-        expect(metadata.frameFidelity, actionId).toBe("source-pixel-copy");
+        expect(metadata.artifactControls, actionId).toContain("soft-alpha-edge-antialias");
+        expect(metadata.frameFidelity, actionId).toBe("source-rgb-copy-alpha-antialias");
+        expect(metadata.edgeTreatment, actionId).toBe("alpha-edge-antialias");
       } else {
         expect(metadata.primaryMotion, actionId).not.toBe("shared-dance-transform");
+        expect(metadata.artifactControls, actionId).toContain("soft-alpha-edge-antialias");
+        expect(metadata.frameFidelity, actionId).toBe("source-rgb-copy-alpha-antialias");
+        expect(metadata.edgeTreatment, actionId).toBe("alpha-edge-antialias");
       }
     }
   });
@@ -114,6 +120,14 @@ describe("native desktop dancer rig", () => {
     );
     expect(swiftSource).not.toContain("case .codexRunning:\n            drawKeyboardAccent");
     expect(swiftSource).not.toContain("drawKeyboardAccent");
+  });
+
+  it("renders dancer frames with high quality interpolation for soft transparent edges", () => {
+    expect(swiftSource).toContain("configureDancerImageQuality()");
+    expect(swiftSource).toContain("dancerImageView.layer?.minificationFilter = .trilinear");
+    expect(swiftSource).toContain("dancerImageView.layer?.magnificationFilter = .linear");
+    expect(swiftSource).toContain("dancerImageView.layer?.contentsGravity = .resizeAspect");
+    expect(swiftSource).toContain("dancerImageView.layer?.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0");
   });
 
   it("keeps global image motion subtle so movement comes from the character frames", () => {

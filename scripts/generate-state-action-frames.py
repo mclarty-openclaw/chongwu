@@ -54,9 +54,10 @@ def write_metadata(spec: ActionSpec, source_indexes: list[int]) -> None:
         "primaryMotion": spec.primary_motion,
         "source": "public/assets/dancer-actions/codex-running",
         "motionTechnique": "single-source-pose-selection",
-        "frameFidelity": "source-pixel-copy",
+        "frameFidelity": "source-rgb-copy-alpha-antialias",
+        "edgeTreatment": "alpha-edge-antialias",
         "sourceFrameIndexes": source_indexes,
-        "artifactControls": ["single-source-frame-no-overlay-afterimage", "no-resample-preserve-source-detail"],
+        "artifactControls": ["single-source-frame-no-overlay-afterimage", "no-resample-preserve-source-detail", "soft-alpha-edge-antialias"],
         "frameCount": 8,
         "frameIntervalMs": spec.frame_interval_ms,
     }

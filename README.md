@@ -7,7 +7,7 @@ Codex Companion 是一个 macOS 原生桌宠，用透明窗口显示一位梦幻
 - Swift/AppKit 原生桌宠窗口，不依赖网页运行时。
 - 通过 Codex lifecycle hook 写入本地 `state.json`，桌宠读取该文件完成状态联动。
 - `codex-running` 保留最协调的梦幻跳舞动作；其它 Codex 状态从这套角色源帧生成独立本地姿态动作，例如前倾执行、托腮思考、挥手等待、庆祝和歪头报错。
-- 状态动作使用单源完整姿态选择和独立动作目录，直接复制源帧像素以保留人物细节，避免局部拼接造成残影；原生层继续限制整张人物图的全局位移/旋转，避免出现“图片整体在动、人物没动”的观感。
+- 状态动作使用单源完整姿态选择和独立动作目录，保留源帧 RGB 细节并只软化 alpha 边缘，避免局部拼接残影和上半身锯齿；原生层继续限制整张人物图的全局位移/旋转，避免出现“图片整体在动、人物没动”的观感。
 - 动作 PNG 懒加载、进程探测缓存、低频舞台重绘，降低常驻资源占用。
 
 ## Requirements
@@ -83,7 +83,7 @@ public/assets/dancer-actions/
 python3 scripts/generate-state-action-frames.py
 ```
 
-生成策略是保持同一个梦幻白色半透明少女角色，每一帧只使用一个完整源姿态，不再把头部、手臂、裙摆局部叠加到另一帧上，也不对人物做旋转/缩放重采样。每个 `action.json` 记录 `sourceFrameIndexes`、`frameFidelity = source-pixel-copy` 和残影控制标记，确保 `idle`、`command-running`、`thinking`、`long-running`、`waiting-user`、`success`、`error` 保持不同节奏和轮廓，同时避免人物变糊、残影、黑块或拼接断层。
+生成策略是保持同一个梦幻白色半透明少女角色，每一帧只使用一个完整源姿态，不再把头部、手臂、裙摆局部叠加到另一帧上，也不对人物做旋转/缩放重采样。每个 `action.json` 记录 `sourceFrameIndexes`、`frameFidelity = source-rgb-copy-alpha-antialias`、`edgeTreatment = alpha-edge-antialias` 和残影控制标记，确保各状态保持不同节奏和轮廓，同时减少人物变糊、残影、黑块、拼接断层和透明边缘锯齿。
 
 ## Codex State Hooks
 

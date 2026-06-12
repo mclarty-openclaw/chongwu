@@ -802,6 +802,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         dancerImageView.imageScaling = .scaleProportionallyUpOrDown
         dancerImageView.alphaValue = 0.98
         dancerImageView.wantsLayer = true
+        configureDancerImageQuality()
         dancerImageView.layer?.shadowColor = NSColor(calibratedRed: 0.74, green: 0.92, blue: 1, alpha: 1).cgColor
         dancerImageView.layer?.shadowOpacity = 0.86
         dancerImageView.layer?.shadowRadius = 22
@@ -828,6 +829,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.makeKeyAndOrderFront(nil)
         window.orderFrontRegardless()
         writeDebugLog("window=\(window.frame) dancerFrames=\(dancerFrames.count) actionClips=\(actionClips.keys.count)")
+    }
+
+    private func configureDancerImageQuality() {
+        dancerImageView.layer?.minificationFilter = .trilinear
+        dancerImageView.layer?.magnificationFilter = .linear
+        dancerImageView.layer?.contentsGravity = .resizeAspect
+        dancerImageView.layer?.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
+        dancerImageView.layer?.shouldRasterize = false
     }
 
     private func loadDancerFrames() -> [NSImage] {

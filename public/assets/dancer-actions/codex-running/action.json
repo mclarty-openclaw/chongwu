@@ -3,5 +3,10 @@
   "poseFamily": "dance-loop",
   "primaryMotion": "elegant dance loop",
   "source": "public/assets/dancer-frames",
+  "frameFidelity": "source-rgb-copy-alpha-antialias",
+  "edgeTreatment": "alpha-edge-antialias",
+  "artifactControls": [
+    "soft-alpha-edge-antialias"
+  ],
   "frameCount": 8
 }

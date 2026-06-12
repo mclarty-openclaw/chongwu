@@ -15,7 +15,7 @@
 1. 用户明确喜欢参考图里的白色透明少女视觉。
 2. 当前 8 帧梦幻少女跳舞动效方向最协调，应作为角色源帧和 `codex_running` 主循环。
 3. 桌宠当前面积偏小，默认角色高度必须接近或超过常见 1080p 屏幕高度的一半。
-4. 非 `codex_running` 状态必须有独立姿态族；状态语义通过完整源姿态序列、节奏、气泡和轻量叠加装饰共同表达。动作生成必须直接复制源帧像素，不做旋转/缩放重采样，避免人物变糊、局部拼接残影和低质量旧动作造成的整图晃动感。
+4. 非 `codex_running` 状态必须有独立姿态族；状态语义通过完整源姿态序列、节奏、气泡和轻量叠加装饰共同表达。动作生成必须保留源帧 RGB 细节，只对 alpha 透明边缘做轻量抗锯齿，不做旋转/缩放重采样，避免人物变糊、局部拼接残影、手臂/头部锯齿和低质量旧动作造成的整图晃动感。
 
 ## 2. 关键调整
 
@@ -224,7 +224,7 @@ public/assets/dancer-actions/
 
 ### 5.3 当前素材方案
 
-v9 决策：用户确认 `codex-running` 的梦幻跳舞效果整体最协调，但“所有状态都像同一个跳舞动作”仍然不够清楚。后续视觉检查发现，基于半透明少女帧做头部、手臂、裙摆的局部拼接会产生残影或切块；对整个人物做轻微旋转/缩放又会让人物细节变糊。因此当前方案以 `codex-running` 作为角色源帧和运行态主循环，其它状态由 `scripts/generate-state-action-frames.py` 生成独立动作目录；每一帧只选择一个完整源姿态并直接复制源像素，通过更丰富的 `sourceFrameIndexes` 序列表达动作差异。
+v9 决策：用户确认 `codex-running` 的梦幻跳舞效果整体最协调，但“所有状态都像同一个跳舞动作”仍然不够清楚。后续视觉检查发现，基于半透明少女帧做头部、手臂、裙摆的局部拼接会产生残影或切块；对整个人物做轻微旋转/缩放又会让人物细节变糊；透明 alpha 硬边会让上半身、手臂和头部出现锯齿。因此当前方案以 `codex-running` 作为角色源帧和运行态主循环，其它状态由 `scripts/generate-state-action-frames.py` 生成独立动作目录；每一帧只选择一个完整源姿态，保留 RGB 细节并只软化 alpha 边缘，通过更丰富的 `sourceFrameIndexes` 序列表达动作差异。
 
 | 状态 clip | 姿态族 | 动作语义 |
 | --- | --- | --- |
@@ -237,7 +237,7 @@ v9 决策：用户确认 `codex-running` 的梦幻跳舞效果整体最协调，
 | `success` | `star-celebration-pose` | 抬身展开、裙摆扩大，配合星光庆祝 |
 | `error` | `concerned-tilt-pose` | 歪头收缩、谨慎观察，配合日志/放大镜提示 |
 
-验收时重点看四件事：人物动作必须协调、像人物自己在动；不同状态的轮廓和姿态必须能区分；单帧里不能出现重复手臂、重复头部、黑色切块或局部拼接断层；生成帧必须保留源帧清晰度，不能因重采样变糊。
+验收时重点看五件事：人物动作必须协调、像人物自己在动；不同状态的轮廓和姿态必须能区分；单帧里不能出现重复手臂、重复头部、黑色切块或局部拼接断层；生成帧必须保留源帧清晰度，不能因重采样变糊；手臂、头部、上半身透明边缘不能有明显锯齿。
 
 ## 6. 窗口与交互设计
 
@@ -656,4 +656,4 @@ v9 已补充独立完整姿态动作策略：
 
 - 根据最新反馈，统一跳舞主循环导致状态区别仍不明显。因此恢复按状态加载独立 clip。
 - 所有非 `codex-running` clip 都从协调跳舞源帧选择完整姿态序列，禁止把多个半透明局部姿态叠在同一帧里，也禁止对人物做旋转/缩放重采样。
-- 当前测试要求：原生映射必须按状态返回独立 action id；非 `codex-running` clip 的 `action.json` 必须声明 `motionTechnique = single-source-pose-selection`、`frameFidelity = source-pixel-copy`、`sourceFrameIndexes`，并带有 `single-source-frame-no-overlay-afterimage` 与 `no-resample-preserve-source-detail` 控制；全局位移和旋转仍必须保持低幅度。
+- 当前测试要求：原生映射必须按状态返回独立 action id；clip 的 `action.json` 必须声明 `frameFidelity = source-rgb-copy-alpha-antialias`、`edgeTreatment = alpha-edge-antialias`、`sourceFrameIndexes`，并带有 `single-source-frame-no-overlay-afterimage`、`no-resample-preserve-source-detail` 与 `soft-alpha-edge-antialias` 控制；原生 `NSImageView` 必须启用高质量 layer 插值；全局位移和旋转仍必须保持低幅度。
