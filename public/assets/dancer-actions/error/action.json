@@ -1,0 +1,7 @@
+{
+  "id": "error",
+  "poseFamily": "magnifier-error",
+  "primaryMotion": "worried magnifier and log pose",
+  "source": "public/assets/source/dancer-actions-keyposes-v4.png",
+  "frameCount": 10
+}

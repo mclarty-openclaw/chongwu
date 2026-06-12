@@ -1,0 +1,7 @@
+{
+  "id": "idle",
+  "poseFamily": "resting-idle",
+  "primaryMotion": "seated sleepy breathing pose",
+  "source": "public/assets/source/dancer-actions-keyposes-v4.png",
+  "frameCount": 8
+}

@@ -1,0 +1,7 @@
+{
+  "id": "codex-running",
+  "poseFamily": "dance-loop",
+  "primaryMotion": "elegant dance loop",
+  "source": "public/assets/dancer-frames",
+  "frameCount": 8
+}

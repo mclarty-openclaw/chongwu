@@ -1,0 +1,7 @@
+{
+  "id": "thinking",
+  "poseFamily": "slow-thinking-dance",
+  "primaryMotion": "slow contemplative dance with thinking sparkles",
+  "source": "public/assets/source/dancer-actions-keyposes-v4.png",
+  "frameCount": 8
+}

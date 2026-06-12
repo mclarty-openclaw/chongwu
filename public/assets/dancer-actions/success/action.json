@@ -1,0 +1,7 @@
+{
+  "id": "success",
+  "poseFamily": "jump-celebration",
+  "primaryMotion": "celebratory jump with stars",
+  "source": "public/assets/source/dancer-actions-keyposes-v4.png",
+  "frameCount": 12
+}

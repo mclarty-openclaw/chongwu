@@ -1,0 +1,7 @@
+{
+  "id": "command-running",
+  "poseFamily": "focused-terminal",
+  "primaryMotion": "forward leaning terminal focus",
+  "source": "public/assets/source/dancer-actions-keyposes-v4.png",
+  "frameCount": 10
+}

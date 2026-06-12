@@ -1,0 +1,7 @@
+{
+  "id": "long-running",
+  "poseFamily": "slow-dream-dance",
+  "primaryMotion": "very slow dream dance with coffee accent",
+  "source": "public/assets/source/dancer-actions-keyposes-v4.png",
+  "frameCount": 10
+}
